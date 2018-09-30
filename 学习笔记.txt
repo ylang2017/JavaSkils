@@ -1,0 +1,231 @@
+1、maven搭建 私有仓库 nexus
+
+2、读写分离
+
+3、单点接入
+
+4、TIMEDIFF(NOW(),CREATE_TIME) 、DATEDIFF(d1,d2)
+
+5、js trigger('change') 触发绑定事件
+
+6、js 时间戳格式转 yyyy-MM-dd HH:mm:ss格式时间
+function timestampToTime(timestamp) {
+	if(timestamp){
+		var date = new Date(timestamp);//时间戳为10位需*1000，时间戳为13位的话不需乘1000
+		Y = date.getFullYear() + '-';
+		M = (date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1) : date.getMonth()+1) + '-';
+		D = date.getDate() + ' ';
+		h = date.getHours() + ':';
+		m = date.getMinutes() + ':';
+		s = date.getSeconds();
+		return Y+M+D+h+m+s;
+	}
+	return "";
+}
+
+7、@RequestMapping 来处理多个 URI
+ @RequestMapping(value = {  
+        "",  
+        "/page",  
+        "page*",  
+        "view/*,**/msg"  
+    })  
+	
+8、格式化form表单数据，可作为ajax请求的data数据
+var formData = new FormData($("#form表单id")[0]);	
+9、实现文本参数和文件参数同时上传的方法
+（1）
+前台数据:
+<form id="AddForm" action="Manage/add.action" method="post" enctype="multipart/form-data">
+   <input type="file" name="file">
+
+   <input type="text" name="username">
+
+   <input type="text" name="usermobile">	
+
+</form>
+后台映射接收到后将普通的HttpServletRequest转换为MultipartHttpServletRequest 
+MultipartHttpServletRequest mRequest = (MultipartHttpServletRequest)request;
+然后用mRequest.getFile("file")得到MultipartFile对象从而得到文件相关信息
+利用mRequest.getParameter("username")得到表单其他相关字段信息
+spring MVC需要如下配置
+ <bean id="multipartResolver"  
+           class="org.springframework.web.multipart.commons.CommonsMultipartResolver">  
+           <!-- set the max upload size100MB -->  
+           <property name="maxUploadSize">  
+               <value>104857600</value>  
+           </property>  
+           <property name="maxInMemorySize">  
+               <value>4096</value>  
+           </property>  
+    </bean>  
+（2）使用ajaxpost请求，把文本参数放在请求头里，把文件参数放在请求体里。（放在请求头里的参数可能存在中文乱码隐患）	
+
+10、nugix 反向代理
+正向代理的概念
+正向代理,也就是传说中的代理,他的工作原理就像一个跳板,
+简单的说,
+我是一个用户,我访问不了某网站,但是我能访问一个代理服务器
+这个代理服务器呢,他能访问那个我不能访问的网站
+于是我先连上代理服务器,告诉他我需要那个无法访问网站的内容
+代理服务器去取回来,然后返回给我
+从网站的角度,只在代理服务器来取内容的时候有一次记录
+有时候并不知道是用户的请求,也隐藏了用户的资料,这取决于代理告不告诉网站
+结论就是 正向代理 是一个位于客户端和原始服务器(origin server)之间的服务器，为了从原始服务器取得内容，客户端向代理发送一个请求并指定目标(原始服务器)，然后代理向原始服务器转交请求并将获得的内容返回给客户端。客户端必须要进行一些特别的设置才能使用正向代理。
+
+反向代理的概念
+例用户访问 http://ooxx.me/readme
+但ooxx.me上并不存在readme页面
+他是偷偷从另外一台服务器上取回来,然后作为自己的内容吐给用户
+但用户并不知情
+这很正常,用户一般都很笨
+这里所提到的 ooxx.me 这个域名对应的服务器就设置了反向代理功能
+结论就是 反向代理正好相反，对于客户端而言它就像是原始服务器，并且客户端不需要进行任何特别的设置。客户端向反向代理 的命名空间(name-space)中的内容发送普通请求，接着反向代理将判断向何处(原始服务器)转交请求，并将获得的内容返回给客户端，就像这些内容 原本就是它自己的一样。
+
+11、如何利用重定向传值？
+	①、重定向之前把参数放进Session中，在重定向之后的controller中把参数从Session中取出并放进ModelAndView
+　　②、使用RedirectAttributes类，这种实现方式比较简单。
+　　再总结一下servlet中转发request.getRequestDispatcher().forward()和重定向response.sendRedirect()的区别：
+　　①、转发是一次请求，一次响应，而重定向是两次请求，两次响应
+　　②、转发：servlet和jsp共享一个request，重定向：两次请求request独立，所以前面request里面setAttribute()的任何东西，在后面的request里面都获取不到
+　　③、转发：地址栏不会改变，重定向：地址栏发生变化。
+12、常用el对象
+	(1)、${pageContext} 获取到 pageContext 对象，它不是在四个域里面去找，而是先在自己定义的对象中找，如果找到了就取出来。
+	(2)、${pageScope} 得到的是 page 域 (pageContext) 中保存数据的 Map集合。也就是指定在 page 域中查找。
+	(3)、${requestScope}、${sessionScope}、${applicationScope} 和上面的 pageScope 一样，都是在特定的域中检索数据。
+	(4)、${param} 获取存在 request 中请求参数的 Map，常用在数据回显上。
+	(5)、${paramValues} 获取存在 request 中请求参数名相同的值的 String[] 数组。
+	(8)、${header} 获取 HTTP 请求头的 Map 对象。
+	(9)、${headValues} 获取 HTTP 请求头值的 Map 对象
+	(10)、${cookie} 获取所有 cookie 的 Map 对象
+	(11)、${initParam} 获取保存所有 Web 应用初始化参数的 Map 对象 
+	pageContext.request是一个具体的对象，在你的http请求过程中存在。
+	requestScope是一个Map，这个Map中存放了在request作用域中的属性键值对，就这么简单而已，它不是request对象，而是request对象属性的封装，pageContext.request才是真正的request对象。
+13、如何用js修改！important 标记的css
+    <div id="header" style="text-align:center"></div>
+	但是需要注意，这种方法会覆盖原先层级上的所有样式。
+	$("#header").css("cssText","background-color:#fff !important");//直接修改目标的cssText,把新的样式写入。
+	原先的text-align:会消失。只剩下background-color
+	
+14、示例： 当前url：http://localhost:8080/CarsiLogCenter_new/idpstat.jsp?action=idp.sptopn
+	request.getRequestURL() ：http://localhost:8080/CarsiLogCenter_new/idpstat.jsp
+	request.getRequestURI() ：/CarsiLogCenter_new/idpstat.jsp
+	request.getContextPath()：/CarsiLogCenter_new
+	request.getServletPath()： /idpstat.jsp
+	request.getQueryString()：action=idp.sptopn	
+	
+15、不跨域时操作iframe窗内的对象的方法
+   var $iframe =$("#loginPageIframe").contents();	
+	
+16、在EL中empty对""和null的处理都返回true，而==null对""返回false，对null返回true。
+	el表达式一般不直接用==  != > < >= <=之类的表示相等不等于 大于 小于 大于等于 小于等于,而是使用字母表示的表达式,他们的表示如下：
+	== eq 等于
+	!= ne 不等于
+	> gt 大于
+	< lt 小于
+	>= ge 大于等于
+	<= le 小于等于
+	not empty 不等于空 包括 null和""
+	empty  空 包括 null和""
+    JSON.stringify(searchData)
+17、web.xml 转码设置
+	<filter>
+	  <filter-name>Spring character encoding filter</filter-name>
+	  <filter-class> org.springframework.web.filter.CharacterEncodingFilter </filter-class>
+	  <init-param>
+		<param-name>encoding</param-name>
+		<param-value>utf-8</param-value>
+	  </init-param>
+	</filter>
+	<filter-mapping>
+	  <filter-name>Spring character encoding filter</filter-name>
+	  <url-pattern>/*</url-pattern>
+	</filter-mapping>
+
+18、使用get请求包含中文参数时，乱码的相关问题。
+	一般情况下, 发送 encodeURIComponent(parmeName)+"="+encodeURIComponent(parmeValue);
+	接收时, 直接 String paramValue = request.getParameter(paramName); // 容器自动解码.
+
+	我们知道 encodeURIComponent 使用的是 UTF-8 编码规则来编的.
+	如果 request.getParameter(paramName) 时,容器也按 UTF-8 解的话,是正确的. 根本无须在客户端
+	进行二次的 encodeURIComponent(...)
+
+	如果 request.getParameter(paramName),容器没有按 UTF-8 解的话, 结果只有一个,就是乱码!
+	容器按什么编码来解码,决定于 request.setCharacterEncoding(***) 或者 服务器程序配置.
+
+	如果你在 jsp 程序中,能够 request.setCharacterEncoding("UTF-8"), 并且 修改服务器配置,让容器在解 GET 提交的参数时,使用 UTF-8.
+
+	客户端提交前不用二次编码, 接收时,也只要直接 request.getParameter(paramName) 即可
+
+	---------------------
+
+	为什么网上会有人提出在客户端对字符串重复编码两次呢.
+	如果因为项目需要,不能指定容器使用何种编码规则来解码提交的参数, 比如:需要接收来自不同页面，不地编码的参数内容时。 (又或者是开发人员被这有点复杂的东东搞得晕头转向，不懂得如何正确的去做好这接收参数的工作)
+	这个时候，在客户端对参数进行二次编码，可以有效的避开“提交多字节字符”的这个棘手问题。
+	因为第一次编码，你的参数内容便不带有多字节字符了，成了纯粹的 Ascii 字符串。(这里把编第一次的结果叫成 [STR_ENC1] 好了。[STR_ENC1] 是不带有多字节字符的)
+	再编一次后，提交，接收时容器自动解一次　（容器自动解的这一次，不管是按 GBK 还是 UTF-8 还是 ISO-8859-1 都好，都能够正确的得到 [STR_ENC1]）
+	然后，再在程序中实现一次 decodeURIComponent (Java中通常使用 java.net.URLDecoder(***, "UTF-8")) 就可以得到想提交的参数的原值。
+
+19、springMVC接收数组参数时，value 必须带[]，否者无法接收
+原因是ajax请求深度序列化了参数,在springMVC接收时需要反序列化。【】告诉处理器要以什么类型进行反序列化。
+除此之外还可以设置ajax请求参数traditional：true阻止深度序列化。这样的话后台可以用正常方式接收数组类型参数。
+@RequestParam(required = false, value = "updateParams[]")
+
+20、js   json 字符串和对象互转
+	var str = JSON.stringify(jsObj);     
+    console.log(typeof str); //string
+    var str1 = JSON.parse(str); //parse对格式要求非常严格必须是'{"key":"value"}' 才会解析
+	或eval()
+	console.log(typeof str); //object	
+
+21、CASE子句
+	SELECT
+		CASE 
+		vendor_id WHEN '' THEN 'other'
+	ELSE IFNULL(vendor_id,'other')
+	END vendor_id111,
+	sum(amount)
+	FROM
+		mp_bill
+	WHERE
+		user_master_id = '1483942583013'
+	AND bill_type = 'import'
+	AND create_time > '2018-08-09 17:59:57'
+	GROUP BY
+	 vendor_id111
+
+ 22、JPA手动回滚事务 
+ TransactionAspectSupport.currentTransactionStatus().setRollbackOnly(); 
+
+垂直居中margin-top: -2px; margin-bottom: 1px; vertical-align: middle;
+2 display:table-cell;vertical-align:middle;text-align: center;
+
+
+23、http://blog.sina.com.cn/s/blog_979d1c9f0101lvqp.html
+跨域解决方案
+
+24、美团开发文档。
+http://developer.meituan.com/openapi#2.1
+
+
+25、@RequestBody不能和@RequestParam一起使用
+使用@RequestBody前端参数必须是json字符串型。（后台解析
+因此contentType：'application/json'
+
+
+
+
+
+26、mysql中int(m)、thinyint(m)中的m含义。仅代表显示位数，而非类型长度。
+无论你存的数值是多少，多大或者多小，占用的字节大小都是固定的。
+例如，之前设置的int(1)，虽然M值是1个字符，但是它所占用的空间大小永远都是4个字节的大小，
+换句话说就是，你可以存入有符号整型从-2 147 483 648到2 147 483 647包括这两个数的中间任何一个数。int(1)和int(11)占用的是4个字节，可以存入上述这些数，tinyint(1)和tinyint(4)占用的是1个字节，
+可以存入从-128到127的数，这也是为什么之前的一次试验，int(1)插入128成功，而tinyint(1)插入128却提示超出长度。
+
+
+
+
+
+
+
+	
