@@ -1,4 +1,5 @@
-﻿	javaScript中的this指向在函数定义的时候是无法确定的，只有函数执行的时候才能确定this指向谁，从简单来说，谁调用了this,this就指向谁，但是也有特殊情况，在经验中会有记录。
+﻿	javaScript中的this指向在函数定义的时候是无法确定的，只有函数执行的时候才能确定this指向谁，从简单来说，谁调用了this,this就指向谁，
+但是也有特殊情况，在经验中会有记录。
 
 	第一个栗子，证明谁调用this，this指向谁：
 	function pointerTest(){
@@ -15,8 +16,8 @@
 	Window
 
 	原因分析：
-	按照上面说的，this指向的是调用它的对象。pointerTest()是一个全局函数，默认是被Window对象调用的，因此在函数内的this指向Window对象，又因为Window对象没有apple这个属性，所以
-控制台第一行输出undefined。第二行输出this的时候也证明了此时this指向的是Window。
+	按照上面说的，this指向的是调用它的对象。pointerTest()是一个全局函数，默认是被Window对象调用的，因此在函数内的this指向Window对象，
+又因为Window对象没有apple这个属性，所以控制台第一行输出undefined。第二行输出this的时候也证明了此时this指向的是Window。
 	
 	第二个栗子，证明谁调用this，this指向谁：
 	var apple = {
@@ -33,8 +34,8 @@
 	red
 	
 	原因分析：
-	apple对象有2个属性，color和getColor,其中color是一个字符串类型的属性，getColor是一个匿名方法。当apple对象调用了匿名方法的时候，this指针指向apple，执行匿名方法时打印this对象
-的color属性，也就是apple的color属性。因此打印出red。
+	apple对象有2个属性，color和getColor,其中color是一个字符串类型的属性，getColor是一个匿名方法。当apple对象调用了匿名方法的时候，
+this指针指向apple，执行匿名方法时打印this对象的color属性，也就是apple的color属性。因此打印出red。
 
 	至此，可能有小伙伴会恍然大明白："懂了懂了，谁调的就指向谁"。那来看两个特殊点的栗子，证明你懂了。
 	第三个栗子：
@@ -58,8 +59,7 @@
 	女
 	
 	答案分析：
-	你的答案应该也是这样的，因为哪怕你不知道this的指向单纯从伦理角度也能分析出来，哈哈。但是我们再用之前的结论（谁调用了this,this就指向谁）来捋一捋，首先man对象调用了wife,此时this
-指的是man,然后又调用了getSex，但却没输出"男"，说明this的指向发生了变化指向了wife,不信的话在“console.log(this.sex);”下再加一行输出“console.log(this);”可以证明这一点。再分析之前的结论好像有些不准确,this的指向应该是它的直接调用对象。
+	你的答案应该也是这样的，因为哪怕你不知道this的指向单纯从伦理角度也能分析出来，哈哈。但是我们再用之前的结论（谁调用了this,this就指向谁）来捋一捋，首先man对象调用了wife,此时this指的是man,然后又调用了getSex，但却没输出"男"，说明this的指向发生了变化指向了wife,不信的话在“console.log(this.sex);”下再加一行输出“console.log(this);”可以证明这一点。再分析之前的结论好像有些不准确,this的指向应该是它的直接调用对象。
 再总结一下应该是："谁直接调用了this，this就指向谁，多层级连续调用时，this的指向会发生变化。"
 	
 	再来一个更复杂一些的栗子：
@@ -86,8 +86,9 @@
 	undefined
 	
 	结果分析：
-	能想明白不？没有的话再分析一下这句话"谁直接调用了this，this就指向谁，多层级连续调用时，this的指向会发生变化。" 起初，man用.字符调用了wife,此时this指向man,得到了man的wife。之后wife用.字符"调用"了getSex（注意这里没有加括号,相当于获得了getSex这个方法，而并未执行它。所以我给调用2个字加了引号，因为这样形容并不准确。）
-再然后把getSex方法赋给了m这个变量，this就又指向了m。最后m执行的时候，m是一个全局变量，this指向的是window，因此想打印出window的sex属性自然得到的是"undefined "啦。
+	能想明白不？没有的话再分析一下这句话"谁直接调用了this，this就指向谁，多层级连续调用时，this的指向会发生变化。" 起初，man用.字符调用了wife,此时this指向man,得到了man的wife。之后wife用.字符"调用"了getSex（注意这里没有加括号,相当于获得了getSex这个方法，而并未执行它。
+所以我给调用2个字加了引号，因为这样形容并不准确。）再然后把getSex方法赋给了m这个变量，this就又指向了m。最后m执行的时候，m是一个全局变量，
+this指向的是window，因此想打印出window的sex属性自然得到的是"undefined "啦。
 
 	最后一个栗子（且吃且珍惜呀，哈哈）：
 	function Apple(){
