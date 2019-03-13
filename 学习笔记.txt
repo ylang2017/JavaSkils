@@ -223,7 +223,7 @@ http://developer.meituan.com/openapi#2.1
 可以存入从-128到127的数，这也是为什么之前的一次试验，int(1)插入128成功，而tinyint(1)插入128却提示超出长度。
 
 
-
+27、js对象和数组的深浅拷贝。（值引用和对象引用）https://www.cnblogs.com/jiangzilong/p/6513552.html
 
 
 
